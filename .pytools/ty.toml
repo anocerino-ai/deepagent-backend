@@ -1,0 +1,8 @@
+# Type checking configuration for ty
+
+[environment]
+python-version = "3.12"
+root = ["src", "packages/s3/src", "packages/postgres/src", "packages/azure-blob/src", "packages/gcs/src", "packages/mongodb/src", "packages/redis/src"]
+
+[rules]
+possibly-missing-import = "error"

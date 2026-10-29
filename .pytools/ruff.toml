@@ -1,0 +1,29 @@
+# Ruff: linting, formatting, import sorting
+line-length = 105
+target-version = "py312"
+
+[lint]
+select = [
+  "E",   # pycodestyle errors
+  "W",   # pycodestyle warnings
+  "F",   # pyflakes
+  "I",   # isort
+  "B",   # bugbear
+  "UP",  # pyupgrade
+  "S",   # bandit (security)
+  "ASYNC",
+  "SIM",
+]
+ignore = []
+
+[lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106", "S108", "S310", "SIM117"]   # asserts and dummy credentials are fine in tests
+"**/__init__.py" = ["F401"]
+
+"scripts/**" = ["S603", "S607"]
+
+[format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+

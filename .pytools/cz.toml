@@ -1,0 +1,23 @@
+# Commitizen configuration: every distribution is released in lockstep
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.1.0"
+version_files = [
+  "pyproject.toml:^version",
+  "pyproject.toml:deepagent-backend-"
+  "packages/s3/pyproject.toml:^version",
+  "packages/s3/pyproject.toml:deepagent-backend=="
+  "packages/postgres/pyproject.toml:^version",
+  "packages/postgres/pyproject.toml:deepagent-backend=="
+  "packages/azure-blob/pyproject.toml:^version",
+  "packages/azure-blob/pyproject.toml:deepagent-backend=="
+  "packages/gcs/pyproject.toml:^version",
+  "packages/gcs/pyproject.toml:deepagent-backend=="
+  "packages/mongodb/pyproject.toml:^version",
+  "packages/mongodb/pyproject.toml:deepagent-backend=="
+  "packages/redis/pyproject.toml:^version",
+  "packages/redis/pyproject.toml:deepagent-backend=="
+]
+tag_format = "v$version"
+update_changelog_on_bump = false
+changelog_file = "CHANGELOG.md"

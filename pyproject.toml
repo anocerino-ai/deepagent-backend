@@ -1,0 +1,88 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "deepagent-backend"
+version = "0.1.0"
+description = "Remote storage backends for Deep Agents: install only the ones you need, e.g. deepagent-backend[s3]"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+  {name = "Antonio Nocerino", email = "antonio.nocerinoai@gmail.com"},
+]
+keywords = ["deepagents", "langchain", "agents", "backend", "storage", "s3", "postgres", "redis", "mongodb", "gcs", "azure"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Framework :: AsyncIO",
+  "Typing :: Typed",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+  "deepagents>=0.7.32",
+  "wcmatch>=10.1",
+]
+
+[project.optional-dependencies]
+s3 = ["deepagent-backend-s3==0.1.0"]
+postgres = ["deepagent-backend-postgres==0.1.0"]
+azure-blob = ["deepagent-backend-azure-blob==0.1.0"]
+gcs = ["deepagent-backend-gcs==0.1.0"]
+mongodb = ["deepagent-backend-mongodb==0.1.0"]
+redis = ["deepagent-backend-redis==0.1.0"]
+valkey = ["deepagent-backend-redis==0.1.0"]
+all = [
+  "deepagent-backend-s3==0.1.0",
+  "deepagent-backend-postgres==0.1.0",
+  "deepagent-backend-azure-blob==0.1.0",
+  "deepagent-backend-gcs==0.1.0",
+  "deepagent-backend-mongodb==0.1.0",
+  "deepagent-backend-redis==0.1.0",
+]
+
+[project.urls]
+Repository = "https://github.com/anocerino-ai/deepagent-backend"
+Documentation = "https://github.com/anocerino-ai/deepagent-backend/blob/main/README.md"
+
+[dependency-groups]
+dev = [
+  "commitizen>=4.0.0",
+  "pip-audit>=2.9.0",
+  "pip-licenses>=5.5.5",
+  "pytest>=9.1.1",
+  "pytest-asyncio>=1.4.0",
+  "pytest-cov>=7.1.0",
+  "pytest-docker>=3.2.5",
+  "pytest-mock>=3.17.0",
+  "ruff>=0.17.2",
+  "ty>=0.0.91",
+  "types-aiobotocore-s3>=2.15.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/deepagent_backend"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "README.md", "LICENSE"]
+
+[tool.uv.workspace]
+members = ["packages/s3", "packages/postgres", "packages/azure-blob", "packages/gcs", "packages/mongodb", "packages/redis"]
+
+[tool.uv.sources]
+deepagent-backend-s3 = { workspace = true }
+deepagent-backend-postgres = { workspace = true }
+deepagent-backend-azure-blob = { workspace = true }
+deepagent-backend-gcs = { workspace = true }
+deepagent-backend-mongodb = { workspace = true }
+deepagent-backend-redis = { workspace = true }
+
+[tool.ruff]
+extend = ".pytools/ruff.toml"
