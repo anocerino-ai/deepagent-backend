@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "deepagent-backend-gcs"
+version = "0.1.0"
+description = "Google Cloud Storage storage backend for Deep Agents"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+  {name = "Antonio Nocerino", email = "antonio.nocerinoai@gmail.com"},
+]
+keywords = ['deepagents', 'langchain', 'agents', 'backend', 'gcs', 'google-cloud-storage']
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Framework :: AsyncIO",
+  "Typing :: Typed",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+  "deepagent-backend==0.1.0",
+  "deepagents>=0.7.32",
+  "wcmatch>=10.1",
+  "gcloud-aio-storage>=9.6.4",
+]
+
+[project.urls]
+Repository = "https://github.com/anocerino-ai/deepagent-backend"
+Documentation = "https://github.com/anocerino-ai/deepagent-backend/blob/main/wiki/gcs.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/deepagent_backend_gcs"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "README.md", "LICENSE"]
+
+[tool.uv.sources]
+deepagent-backend = { workspace = true }
