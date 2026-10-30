@@ -117,8 +117,9 @@ Override them with `GARAGE_SECRET_ACCESS_KEY` and `POSTGRES_PASSWORD` if you cus
 One-time setup: add a [pending publisher](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/)
 for each distribution. Use owner `anocerino-ai`, repository `deepagent-backend`, workflow `release.yml`,
 and the matching GitHub environment `pypi-<project-name>` (for example, `pypi-deepagent-backend-s3`).
-To retry publishing an existing tag after configuring publishers, run the workflow manually from `main`
-and enter the tag name, such as `v0.1.0`.
+To publish or retry one distribution, run the workflow manually from `main`, enter the tag name (such as
+`v0.1.0`), and select its project under `publish_project`. Select `all` only when every publisher is set up
+and none of the distributions in that release have already been uploaded.
 
 ## Credits
 

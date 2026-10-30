@@ -9,6 +9,19 @@ on:
         description: Existing release tag to publish
         required: true
         type: string
+      publish_project:
+        description: PyPI project to publish (use one project at a time when using pending publishers)
+        required: true
+        type: choice
+        options:
+          - all
+          - deepagent-backend
+          - deepagent-backend-s3
+          - deepagent-backend-postgres
+          - deepagent-backend-azure-blob
+          - deepagent-backend-gcs
+          - deepagent-backend-mongodb
+          - deepagent-backend-redis
 
 jobs:
   build:
@@ -50,23 +63,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - project: deepagent-backend
-            environment: pypi-deepagent-backend
-          - project: deepagent-backend-s3
-            environment: pypi-deepagent-backend-s3
-          - project: deepagent-backend-postgres
-            environment: pypi-deepagent-backend-postgres
-          - project: deepagent-backend-azure-blob
-            environment: pypi-deepagent-backend-azure-blob
-          - project: deepagent-backend-gcs
-            environment: pypi-deepagent-backend-gcs
-          - project: deepagent-backend-mongodb
-            environment: pypi-deepagent-backend-mongodb
-          - project: deepagent-backend-redis
-            environment: pypi-deepagent-backend-redis
+        project: ${{ fromJSON(github.event_name == 'workflow_dispatch' && inputs.publish_project != 'all' && format('["{0}"]', inputs.publish_project) || '["deepagent-backend","deepagent-backend-s3","deepagent-backend-postgres","deepagent-backend-azure-blob","deepagent-backend-gcs","deepagent-backend-mongodb","deepagent-backend-redis"]') }}
     environment:
-      name: ${{ matrix.environment }}
+      name: pypi-${{ matrix.project }}
       url: https://pypi.org/project/${{ matrix.project }}/
     permissions:
       id-token: write
