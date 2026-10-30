@@ -112,10 +112,13 @@ Override them with `GARAGE_SECRET_ACCESS_KEY` and `POSTGRES_PASSWORD` if you cus
 
 1. `just bump` — commitizen bumps the version of every `pyproject.toml` and every cross-pin at once.
 2. Push the tag (`vX.Y.Z`) and publish a GitHub release; `.github/workflows/release.yml` builds all
-   distributions and uploads them to PyPI through trusted publishing.
+   distributions and publishes each one through its own PyPI trusted publisher.
 
-One-time setup: create the seven projects on PyPI (or add [pending publishers](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/))
-pointing at this repository, workflow `release.yml`, environment `pypi`.
+One-time setup: add a [pending publisher](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/)
+for each distribution. Use owner `anocerino-ai`, repository `deepagent-backend`, workflow `release.yml`,
+and the matching GitHub environment `pypi-<project-name>` (for example, `pypi-deepagent-backend-s3`).
+To retry publishing an existing tag after configuring publishers, run the workflow manually from `main`
+and enter the tag name, such as `v0.1.0`.
 
 ## Credits
 

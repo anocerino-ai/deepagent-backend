@@ -3,6 +3,12 @@ name: Release to PyPI
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing release tag to publish
+        required: true
+        type: string
 
 jobs:
   build:
@@ -10,33 +16,65 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.event.release.tag_name }}
       - uses: astral-sh/setup-uv@v7
       - uses: extractions/setup-just@v3
       - name: Check lockstep versions and tag
+        env:
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.event.release.tag_name }}
         run: |
           python scripts/check_versions.py
           version=$(python -c "import tomllib;print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
-          test "v${version}" = "${GITHUB_REF_NAME}" || { echo "tag ${GITHUB_REF_NAME} != v${version}"; exit 1; }
+          test "v${version}" = "${RELEASE_TAG}" || { echo "tag ${RELEASE_TAG} != v${version}"; exit 1; }
       - run: just build
       - name: Smoke-test every extra
         run: python scripts/smoke_install.py dist
+      - name: Group distributions by PyPI project
+        run: |
+          mkdir -p dist-by-project
+          for project in deepagent-backend deepagent-backend-s3 deepagent-backend-postgres deepagent-backend-azure-blob deepagent-backend-gcs deepagent-backend-mongodb deepagent-backend-redis; do
+            distribution="${project//-/_}"
+            mkdir -p "dist-by-project/${project}"
+            cp dist/"${distribution}"-* "dist-by-project/${project}/"
+          done
       - uses: actions/upload-artifact@v7
         with:
           name: python-package-distributions
-          path: dist/
+          path: dist-by-project/
 
   publish-pypi:
-    name: Publish to PyPI
+    name: Publish ${{ matrix.project }} to PyPI
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - project: deepagent-backend
+            environment: pypi-deepagent-backend
+          - project: deepagent-backend-s3
+            environment: pypi-deepagent-backend-s3
+          - project: deepagent-backend-postgres
+            environment: pypi-deepagent-backend-postgres
+          - project: deepagent-backend-azure-blob
+            environment: pypi-deepagent-backend-azure-blob
+          - project: deepagent-backend-gcs
+            environment: pypi-deepagent-backend-gcs
+          - project: deepagent-backend-mongodb
+            environment: pypi-deepagent-backend-mongodb
+          - project: deepagent-backend-redis
+            environment: pypi-deepagent-backend-redis
     environment:
-      name: pypi
-      url: https://pypi.org/p/deepagent-backend
+      name: ${{ matrix.environment }}
+      url: https://pypi.org/project/${{ matrix.project }}/
     permissions:
       id-token: write
     steps:
       - uses: actions/download-artifact@v8
         with:
           name: python-package-distributions
-          path: dist/
+          path: dist-by-project/
       - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist-by-project/${{ matrix.project }}
