@@ -1,7 +1,7 @@
 # deepagent-backend
 
-Remote storage backends for [Deep Agents](https://github.com/langchain-ai/deepagents): persist agent
-files in S3, PostgreSQL, Azure Blob Storage, Google Cloud Storage, MongoDB or Redis/Valkey.
+Remote storage backends for [LangChain Deep Agents](https://github.com/langchain-ai/deepagents):
+persist agent files in S3, PostgreSQL, Azure Blob Storage, Google Cloud Storage, MongoDB or Redis/Valkey.
 
 Every backend is its own PyPI distribution, so you install **only the client libraries you actually use**:
 
